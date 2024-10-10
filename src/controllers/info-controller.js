@@ -5,7 +5,7 @@ const info = (req,res)=>{
     return res.status(StatusCodes.ACCEPTED).json({
         success : true,
         desc : "API is live",
-        msg : "Ok da Baadu"
+        msg : "Ok"
     })
 
 }
