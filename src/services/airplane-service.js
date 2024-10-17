@@ -25,7 +25,56 @@ async function createAirplane(data){
     }
 }
 
+async function getAllAirplane() {
+    try {
+        const airplanes = await airplaneRepo.getAll()
+        return airplanes
+    } catch (error) {
+        throw new AppError ('cannot  fetch all airplanes',StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
+async function getAirplane(id) {
+    try {
+        const airplane = await airplaneRepo.get(id)
+        return airplane
+    } catch (error) {
+        if(error.statuscode === StatusCodes.NOT_FOUND){
+            throw new AppError('The airplane requested is not found',StatusCodes.NOT_FOUND)
+        }
+        throw new AppError ('cannot  fetch  airplane',StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
+
+async function deleteAirplane(id){
+    try {
+        const response = await airplaneRepo.destroy(id)
+        return response
+    } catch (error) {
+        if(error.statuscode === StatusCodes.NOT_FOUND){
+            throw new AppError('The airplane requested is not found',StatusCodes.NOT_FOUND)
+        }
+        throw new AppError ('cannot  delete airplanes',StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
+async function updateAirplane(id,data){
+    try {
+        const response = await airplaneRepo.update(id,data)
+        return response
+    } catch (error) {
+        if(error.statuscode === StatusCodes.NOT_FOUND){
+            throw new AppError('The airplane requested is not found',StatusCodes.NOT_FOUND)
+        }
+        throw new AppError ('cannot  update airplanes',StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
 
 module.exports = {
-    createAirplane
+    createAirplane,
+    getAllAirplane,
+    getAirplane,
+    deleteAirplane,
+    updateAirplane
 }

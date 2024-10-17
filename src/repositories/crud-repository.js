@@ -1,5 +1,7 @@
 const { where } = require('sequelize')
 const {Logger} = require('../config')
+const AppError = require('../utils/errors/app-error')
+const { StatusCodes } = require('http-status-codes')
 
 class CrudRepository{
     constructor(model){
@@ -13,55 +15,49 @@ class CrudRepository{
     }
 
 
-    async delete(data){
-        try {
-            const response = await this.model.delete({
+    async destroy(data){
+      
+            const response = await this.model.destroy({
                 where : {
                     id : data
                 }
             });
+            if(!response){
+                throw new AppError('There is no data',StatusCodes.NOT_FOUND)
+            }
             return response;
-        } catch (error) {
-            Logger.error('Something went ewrong in : delete')
-            throw error;
-        }
+        
     }
 
     async get(data){
-        try {
+     
             const response = await this.model.findByPk(data)
+            if(!response){
+                throw new AppError('Not able find resource',StatusCodes.NOT_FOUND)
+            }
             return response
-        } catch (error) {
-            Logger.error('Something went wrong in crud Repo')
-            throw error
-            
-        }
+       
     }
 
     async getAll(){
-        try {
+   
             const response = await this.model.findAll()
             return response
-        } catch (error) {
-            Logger.error('Something went wrong in crud Repo')
-            throw error
-            
-        }
+       
     }
 
     async update(id,data){
-        try {
+      
             const response = await this.model.update(data,{
                 where : {
                     id:id
                 }
             })
+            if(!response){
+                throw new AppError('Not able find resource',StatusCodes.NOT_FOUND)
+            }
             return response
-        } catch (error) {
-            Logger.error('Something went wrong in crud Repo')
-            throw error
-            
-        }
+       
     }
     
 
